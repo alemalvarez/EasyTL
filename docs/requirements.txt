@@ -1,1 +1,2 @@
 sphinx==7.3.7
+easytl==0.4.0b0
