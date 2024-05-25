@@ -21,7 +21,7 @@ release = 'v0.4.0-beta'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'sphinx.ext.autodoc'
+    'sphinx.ext.autodoc', # Automatically document all the code
 ]
 
 templates_path = ['_templates']
@@ -29,15 +29,13 @@ templates_path = ['_templates']
 
 autoclass_content = 'both'
 
-
-
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
-
 
 # Default theme:
 # html_theme = 'alabaster'
 # html_static_path = ['_static']
 
+# Read the Docs theme:
 html_theme = 'sphinx_rtd_theme'
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
