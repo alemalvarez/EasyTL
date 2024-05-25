@@ -8,7 +8,9 @@
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../..'))
+import sphinx_rtd_theme  # For Read the Docs theme
+
+sys.path.insert(0, os.path.abspath('../..')) # We tell Sphinx where to find the code
 
 project = 'EasyTL'
 copyright = '2024, Alejandro Mata'
@@ -32,5 +34,10 @@ autoclass_content = 'both'
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
-html_static_path = ['_static']
+
+# Default theme:
+# html_theme = 'alabaster'
+# html_static_path = ['_static']
+
+html_theme = 'sphinx_rtd_theme'
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
