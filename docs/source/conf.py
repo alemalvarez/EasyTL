@@ -8,7 +8,7 @@
 
 import os
 import sys
-import sphinx_rtd_theme  # For Read the Docs theme
+#import sphinx_book_theme  # For Read the Docs theme
 
 sys.path.insert(0, os.path.abspath('../..')) # We tell Sphinx where to find the code
 
@@ -37,5 +37,5 @@ autoclass_content = 'both'
 # html_static_path = ['_static']
 
 # Read the Docs theme:
-html_theme = 'sphinx_rtd_theme'
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+html_theme = 'sphinx_book_theme'
+#html_theme_path = [sphinx_book_theme.get_html_theme_path()]
