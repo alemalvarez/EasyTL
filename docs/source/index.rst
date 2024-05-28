@@ -11,6 +11,8 @@ Welcome to EasyTL's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   easytl
+
 Indices and tables
 ==================
 

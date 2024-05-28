@@ -28,19 +28,17 @@ from .util.llm_util import _validate_easytl_llm_translation_settings, _return_cu
 class EasyTL:
 
     """
-    
     EasyTL global client, used to interact with Translation APIs.
 
-    Use set_credentials() to set the credentials for the specified API type. (e.g. set_credentials("deepl", "your_api_key") or set_credentials("google translate", "path/to/your/credentials.json"))
+    Use :meth:`set_credentials` to set the credentials for the specified API type. (e.g. :meth:`set_credentials("deepl", "your_api_key")` or :meth:`set_credentials("google translate", "path/to/your/credentials.json")`)
 
-    Use test_credentials() to test the validity of the credentials for the specified API type. (e.g. test_credentials("deepl")) (Optional) Done automatically when translating.
+    Use :meth:`test_credentials` to test the validity of the credentials for the specified API type. (e.g. :meth:`test_credentials("deepl")`) (Optional) Done automatically when translating.
 
-    Use translate() to translate text using the specified service with it's appropriate kwargs. Or specify the service by calling the specific translation function. (e.g. openai_translate())
+    Use :meth:`translate` to translate text using the specified service with its appropriate kwargs. Or specify the service by calling the specific translation function. (e.g. :meth:`openai_translate()`)
 
-    Use calculate_cost() to calculate the cost of translating text using the specified service. (Optional)
+    Use :meth:`calculate_cost` to calculate the cost of translating text using the specified service. (Optional)
 
     See the documentation for each function for more information.
-
     """
 
 ##-------------------start-of-set_credentials()---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -970,7 +968,6 @@ class EasyTL:
                                                                                           AnthropicToolsBetaMessage, typing.List[AnthropicToolsBetaMessage]]:
         
         """
-
         Translates the given text using Anthropic.
 
         This function assumes that the API key has already been set.
@@ -983,25 +980,36 @@ class EasyTL:
 
         Anthropic's JSON response is quite unsophisticated and also in Beta, it costs a lot of extra tokens to return a json response. It's also inconsistent. Be careful when using it.
 
-        Parameters:
-        text (string or iterable) : The text to translate.
-        override_previous_settings (bool) : Whether to override the previous settings that were used during the last call to an Anthropic translation function.
-        decorator (callable or None) : The decorator to use when translating. Typically for exponential backoff retrying. If this is None, Anthropic will retry the request twice if it fails.
-        logging_directory (string or None) : The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
-        response_type (literal["text", "raw", "json", "raw_json"]) : The type of response to return. 'text' returns the translated text, 'raw' returns the raw response, an AnthropicMessage object, 'json' returns a json-parseable string. 'raw_json' returns the raw response, an AnthropicMessage object, but with the content as a json-parseable string.
-        response_schema (string or mapping or None) : The schema to use for the response. If None, no schema is used. This is only used if the response type is 'json' or 'json_raw'. EasyTL only validates the schema to the extend that it is None or a valid json. It does not validate the contents of the json. 
-        translation_delay (float or None) : If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
-        translation_instructions (string or SystemTranslationMessage or None) : The translation instructions to use. If None, the default system message is used. If you plan on using the json response type, you must specify that you want a json output and it's format in the instructions. The default system message will ask for a generic json if the response type is json.
-        model (string) : The model to use. (E.g. 'claude-3-haiku-20240307', 'claude-3-sonnet-20240229' or 'claude-3-opus-20240229')
-        temperature (float or NotGiven) : The temperature to use. The higher the temperature, the more creative the output. Lower temperatures are typically better for translation.
-        top_p (float or NotGiven) : The nucleus sampling probability. The higher the value, the more words are considered for the next token. Generally, alter this or temperature, not both.
-        top_k (int or NotGiven) : The top k tokens to consider. Generally, alter this or temperature or top_p, not all three.
-        stop_sequences (list or NotGiven) : String sequences that will cause the model to stop translating if encountered, generally useless.
-        max_output_tokens (int or NotGiven) : The maximum number of tokens to output.
-
-        Returns:
-        result (string or list - string or AnthropicMessage or list - AnthropicMessage or AnthropicToolsBetaMessage or list - AnthropicToolsBetaMessage) : The translation result. A list of strings if the input was an iterable, a string otherwise. A list of AnthropicMessage objects if the response type is 'raw' and input was an iterable, an AnthropicMessage object otherwise. A list of AnthropicToolsBetaMessage objects if the response type is 'raw' and input was an iterable, an AnthropicToolsBetaMessage object otherwise.
-
+        :param text: The text to translate. It can be a string or an iterable of strings.
+        :type text: Union[str, Iterable[str], ModelTranslationMessage, Iterable[ModelTranslationMessage]]
+        :param override_previous_settings: Whether to override the previous settings that were used during the last call to an Anthropic translation function.
+        :type override_previous_settings: bool
+        :param decorator: The decorator to use when translating. Typically for exponential backoff retrying. If this is None, Anthropic will retry the request twice if it fails.
+        :type decorator: Callable or None
+        :param logging_directory: The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
+        :type logging_directory: str or None
+        :param response_type: The type of response to return. 'text' returns the translated text, 'raw' returns the raw response, an AnthropicMessage object, 'json' returns a json-parseable string. 'raw_json' returns the raw response, an AnthropicMessage object, but with the content as a json-parseable string.
+        :type response_type: Literal["text", "raw", "json", "raw_json"] or None
+        :param response_schema: The schema to use for the response. If None, no schema is used. This is only used if the response type is 'json' or 'json_raw'. EasyTL only validates the schema to the extend that it is None or a valid json. It does not validate the contents of the json.
+        :type response_schema: str or Mapping[str, Any] or None
+        :param translation_delay: If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
+        :type translation_delay: float or None
+        :param translation_instructions: The translation instructions to use. If None, the default system message is used. If you plan on using the json response type, you must specify that you want a json output and it's format in the instructions. The default system message will ask for a generic json if the response type is json.
+        :type translation_instructions: str or SystemTranslationMessage or None
+        :param model: The model to use. (E.g. 'claude-3-haiku-20240307', 'claude-3-sonnet-20240229' or 'claude-3-opus-20240229')
+        :type model: str
+        :param temperature: The temperature to use. The higher the temperature, the more creative the output. Lower temperatures are typically better for translation.
+        :type temperature: float or NotGiven
+        :param top_p: The nucleus sampling probability. The higher the value, the more words are considered for the next token. Generally, alter this or temperature, not both.
+        :type top_p: float or NotGiven
+        :param top_k: The top k tokens to consider. Generally, alter this or temperature or top_p, not all three.
+        :type top_k: int or NotGiven
+        :param stop_sequences: String sequences that will cause the model to stop translating if encountered, generally useless.
+        :type stop_sequences: List[str] or NotGiven
+        :param max_output_tokens: The maximum number of tokens to output.
+        :type max_output_tokens: int or NotGiven
+        :return: The translation result. A list of strings if the input was an iterable, a string otherwise. A list of AnthropicMessage objects if the response type is 'raw' and input was an iterable, an AnthropicMessage object otherwise. A list of AnthropicToolsBetaMessage objects if the response type is 'raw' and input was an iterable, an AnthropicToolsBetaMessage object otherwise.
+        :rtype: Union[List[str], str, AnthropicMessage, List[AnthropicMessage], AnthropicToolsBetaMessage, List[AnthropicToolsBetaMessage]]
         """
 
         assert response_type in ["text", "raw", "json", "raw_json"], InvalidResponseFormatException("Invalid response type specified. Must be 'text', 'raw', 'json' or 'raw_json'.")
