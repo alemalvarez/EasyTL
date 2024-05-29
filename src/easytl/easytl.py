@@ -47,13 +47,13 @@ class EasyTL:
     def set_credentials(api_type:typing.Literal["deepl", "gemini", "openai", "google translate", "anthropic", "azure"], credentials:str) -> None:
 
         """
-
         Sets the credentials for the specified API type.
 
-        Parameters:
-        api_type (literal["deepl", "gemini", "openai", "google translate", "anthropic", "azure"]) : The API type to set the credentials for.
-        credentials (string) : The credentials to set. This is an api key for deepl, gemini, anthropic, azure and openai. For google translate, this is a path to your json that has your service account key.
+        :param api_type: The API type to set the credentials for. Supported types are 'deepl', 'gemini', 'openai', 'google translate', 'anthropic', and 'azure'.
+        :type api_type: literal["deepl", "gemini", "openai", "google translate", "anthropic", "azure"]
 
+        :param credentials: The credentials to set. This is an API key for deepl, gemini, anthropic, azure, and openai. For google translate, this is a path to your JSON that has your service account key.
+        :type credentials: str
         """
 
         service_map = {
@@ -76,16 +76,16 @@ class EasyTL:
     def test_credentials(api_type:typing.Literal["deepl", "gemini", "openai", "google translate", "anthropic", "azure"]) -> typing.Tuple[bool, typing.Optional[Exception]]:
 
         """
-
         Tests the validity of the credentials for the specified API type.
 
-        Parameters:
-        api_type (literal["deepl", "gemini", "openai", "google translate", "anthropic", "azure"]) : The API type to test the credentials for.
+        :param api_type: The API type to test the credentials for. (literal["deepl", "gemini", "openai", "google translate", "anthropic", "azure"])
+        :type api_type: str
 
-        Returns:
-        (bool) : Whether the credentials are valid.
-        (Exception) : The exception that was raised, if any. None otherwise.
+        :return: Whether the credentials are valid. (bool)
+        :rtype: bool
 
+        :return: The exception that was raised, if any. None otherwise. (Exception)
+        :rtype: Exception
         """
 
         api_services = {
@@ -122,7 +122,6 @@ class EasyTL:
                            source_lang:str | None = None) -> typing.Union[typing.List[str], str, typing.List[typing.Any], typing.Any]:
         
         """
-
         Translates the given text to the target language using Google Translate.
 
         This function assumes that the credentials have already been set.
@@ -131,20 +130,27 @@ class EasyTL:
 
         Google Translate v2 API is poorly documented and type hints are near non-existent. typing.Any return types are used for the raw response type.
 
-        Parameters:
-        text (string or iterable) : The text to translate.
-        target_lang (string) : The target language to translate to.
-        override_previous_settings (bool) : Whether to override the previous settings that were used during the last call to a Google Translate function.
-        decorator (callable or None) : The decorator to use when translating. Typically for exponential backoff retrying.
-        logging_directory (string or None) : The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
-        response_type (literal["text", "raw"]) : The type of response to return. 'text' returns the translated text, 'raw' returns the raw response.
-        translation_delay (float or None) : If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
-        format (string or None) : The format of the text. Can be 'text' or 'html'. Default is 'text'. Google Translate appears to be able to translate html but this has not been tested thoroughly by EasyTL.
-        source_lang (string or None) : The source language to translate from.
+        :param text: The text to translate. It can be a string or an iterable.
+        :type text: Union[str, Iterable[str]]
+        :param target_lang: The target language to translate to.
+        :type target_lang: str
+        :param override_previous_settings: Whether to override the previous settings that were used during the last call to a Google Translate function.
+        :type override_previous_settings: bool
+        :param decorator: The decorator to use when translating. Typically for exponential backoff retrying.
+        :type decorator: Callable or None
+        :param logging_directory: The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
+        :type logging_directory: str or None
+        :param response_type: The type of response to return. 'text' returns the translated text, 'raw' returns the raw response.
+        :type response_type: Literal["text", "raw"]
+        :param translation_delay: If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
+        :type translation_delay: float or None
+        :param format: The format of the text. Can be 'text' or 'html'. Default is 'text'. Google Translate appears to be able to translate html but this has not been tested thoroughly by EasyTL.
+        :type format: Literal["text", "html"]
+        :param source_lang: The source language to translate from.
+        :type source_lang: str or None
 
-        Returns:
-        result (string or list - string or any or list - any) : The translation result. A list of strings if the input was an iterable, a string otherwise. A list of any objects if the response type is 'raw' and input was an iterable, an any object otherwise.
-
+        :return: The translation result. A list of strings if the input was an iterable, a string otherwise. A list of any objects if the response type is 'raw' and input was an iterable, an any object otherwise.
+        :rtype: Union[str, List[str], Any, List[Any]]
         """
 
         assert response_type in ["text", "raw"], InvalidResponseFormatException("Invalid response type specified. Must be 'text' or 'raw'.")
@@ -210,7 +216,6 @@ class EasyTL:
                                        source_lang:str | None = None) -> typing.Union[typing.List[str], str, typing.List[typing.Any], typing.Any]:
         
         """
-
         Asynchronous version of googletl_translate().
 
         Translates the given text to the target language using Google Translate.
@@ -222,21 +227,29 @@ class EasyTL:
 
         Google Translate v2 API is poorly documented and type hints are near non-existent. typing.Any return types are used for the raw response type.
 
-        Parameters:
-        text (string or iterable) : The text to translate.
-        target_lang (string) : The target language to translate to.
-        override_previous_settings (bool) : Whether to override the previous settings that were used during the last call to a Google Translate function.
-        decorator (callable or None) : The decorator to use when translating. Typically for exponential backoff retrying.
-        logging_directory (string or None) : The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
-        response_type (literal["text", "raw"]) : The type of response to return. 'text' returns the translated text, 'raw' returns the raw response.
-        semaphore (int) : The number of concurrent requests to make. Default is 15.
-        translation_delay (float or None) : If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
-        format (string or None) : The format of the text. Can be 'text' or 'html'. Default is 'text'. Google Translate appears to be able to translate html but this has not been tested thoroughly by EasyTL.
-        source_lang (string or None) : The source language to translate from.
+        :param text: The text to translate. It can be a string or an iterable.
+        :type text: str or iterable
+        :param target_lang: The target language to translate to.
+        :type target_lang: str
+        :param override_previous_settings: Whether to override the previous settings that were used during the last call to a Google Translate function.
+        :type override_previous_settings: bool
+        :param decorator: The decorator to use when translating. Typically for exponential backoff retrying.
+        :type decorator: callable or None
+        :param logging_directory: The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
+        :type logging_directory: str or None
+        :param response_type: The type of response to return. 'text' returns the translated text, 'raw' returns the raw response.
+        :type response_type: literal["text", "raw"]
+        :param semaphore: The number of concurrent requests to make. Default is 15.
+        :type semaphore: int
+        :param translation_delay: If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
+        :type translation_delay: float or None
+        :param format: The format of the text. Can be 'text' or 'html'. Default is 'text'. Google Translate appears to be able to translate html but this has not been tested thoroughly by EasyTL.
+        :type format: str or None
+        :param source_lang: The source language to translate from.
+        :type source_lang: str or None
 
-        Returns:
-        result (string or list - string or any or list - any) : The translation result. A list of strings if the input was an iterable, a string otherwise. A list of any objects if the response type is 'raw' and input was an iterable, an any object otherwise.
-
+        :return: The translation result. A list of strings if the input was an iterable, a string otherwise. A list of any objects if the response type is 'raw' and input was an iterable, an any object otherwise.
+        :rtype: str or list[str] or any or list[any]
         """
 
         assert response_type in ["text", "raw"], InvalidResponseFormatException("Invalid response type specified. Must be 'text' or 'raw'.")
@@ -309,34 +322,49 @@ class EasyTL:
                         ignore_tags:str | typing.List[str] | None = None) -> typing.Union[typing.List[str], str, typing.List[TextResult], TextResult]:
         
         """
-
         Translates the given text to the target language using DeepL.
 
         This function assumes that the API key has already been set.
 
-        Parameters:
-        text (string or iterable) : The text to translate.
-        target_lang (string or Language) : The target language to translate to.
-        override_previous_settings (bool) : Whether to override the previous settings that were used during the last call to a DeepL translation function.
-        decorator (callable or None) : The decorator to use when translating. Typically for exponential backoff retrying. If this parameter is None, DeepL will retry your request 5 times before failing. Otherwise, the given decorator will be used.
-        logging_directory (string or None) : The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
-        response_type (literal["text", "raw"]) : The type of response to return. 'text' returns the translated text, 'raw' returns the raw response, a TextResult object.
-        translation_delay (float or None) : If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
-        source_lang (string or Language or None) : The source language to translate from.
-        context (string or None) : Additional information for the translator to be considered when translating. Not translated itself. This is a DeepL alpha feature and may be removed at any time.
-        split_sentences (literal or SplitSentences or None) : How to split sentences.
-        preserve_formatting (bool or None) : Whether to preserve formatting.
-        formality (literal or Formality or None) : The formality level to use.
-        glossary (string or GlossaryInfo or None) : The glossary to use.
-        tag_handling (literal or None) : How to handle tags.
-        outline_detection (bool or None) : Whether to detect outlines.
-        non_splitting_tags (string or list or None) : Tags that should not be split.
-        splitting_tags (string or list or None) : Tags that should be split.
-        ignore_tags (string or list or None) : Tags that should be ignored.
+        :param text: The text to translate. It can be a string or an iterable.
+        :type text: str or iterable
+        :param target_lang: The target language to translate to.
+        :type target_lang: str or Language
+        :param override_previous_settings: Whether to override the previous settings that were used during the last call to a DeepL translation function.
+        :type override_previous_settings: bool
+        :param decorator: The decorator to use when translating. Typically for exponential backoff retrying. If this parameter is None, DeepL will retry your request 5 times before failing. Otherwise, the given decorator will be used.
+        :type decorator: callable or None
+        :param logging_directory: The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
+        :type logging_directory: str or None
+        :param response_type: The type of response to return. 'text' returns the translated text, 'raw' returns the raw response, a TextResult object.
+        :type response_type: literal["text", "raw"]
+        :param translation_delay: If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
+        :type translation_delay: float or None
+        :param source_lang: The source language to translate from.
+        :type source_lang: str or Language or None
+        :param context: Additional information for the translator to be considered when translating. Not translated itself. This is a DeepL alpha feature and may be removed at any time.
+        :type context: str or None
+        :param split_sentences: How to split sentences.
+        :type split_sentences: literal or SplitSentences or None
+        :param preserve_formatting: Whether to preserve formatting.
+        :type preserve_formatting: bool or None
+        :param formality: The formality level to use.
+        :type formality: literal or Formality or None
+        :param glossary: The glossary to use.
+        :type glossary: str or GlossaryInfo or None
+        :param tag_handling: How to handle tags.
+        :type tag_handling: literal or None
+        :param outline_detection: Whether to detect outlines.
+        :type outline_detection: bool or None
+        :param non_splitting_tags: Tags that should not be split.
+        :type non_splitting_tags: str or list or None
+        :param splitting_tags: Tags that should be split.
+        :type splitting_tags: str or list or None
+        :param ignore_tags: Tags that should be ignored.
+        :type ignore_tags: str or list or None
 
-        Returns:
-        result (string or list - string or TextResult or list - TextResult) : The translation result. A list of strings if the input was an iterable, a string otherwise. A list of TextResult objects if the response type is 'raw' and input was an iterable, a TextResult object otherwise.
-
+        :return: The translation result. A list of strings if the input was an iterable, a string otherwise. A list of TextResult objects if the response type is 'raw' and input was an iterable, a TextResult object otherwise.
+        :rtype: str or list - str or TextResult or list - TextResult
         """
 
         assert response_type in ["text", "raw"], InvalidResponseFormatException("Invalid response type specified. Must be 'text' or 'raw'.")
@@ -416,39 +444,54 @@ class EasyTL:
                             ignore_tags:str | typing.List[str] | None = None) -> typing.Union[typing.List[str], str, typing.List[TextResult], TextResult]:
         
         """
-
         Asynchronous version of deepl_translate().
-        
+
         Translates the given text to the target language using DeepL.
 
         Will generally be faster for iterables. Order is preserved.
 
         This function assumes that the API key has already been set.
-        
-        Parameters:
-        text (string or iterable) : The text to translate.
-        target_lang (string or Language) : The target language to translate to.
-        override_previous_settings (bool) : Whether to override the previous settings that were used during the last call to a DeepL translation function.
-        decorator (callable or None) : The decorator to use when translating. Typically for exponential backoff retrying. If this parameter is None, DeepL will retry your request 5 times before failing. Otherwise, the given decorator will be used.
-        logging_directory (string or None) : The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
-        response_type (literal["text", "raw"]) : The type of response to return. 'text' returns the translated text, 'raw' returns the raw response, a TextResult object.
-        semaphore (int) : The number of concurrent requests to make. Default is 15.
-        translation_delay (float or None) : If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
-        source_lang (string or Language or None) : The source language to translate from.
-        context (string or None) : Additional information for the translator to be considered when translating. Not translated itself. This is a DeepL alpha feature and may be removed at any time.
-        split_sentences (literal or SplitSentences or None) : How to split sentences.
-        preserve_formatting (bool or None) : Whether to preserve formatting.
-        formality (literal or Formality or None) : The formality level to use.
-        glossary (string or GlossaryInfo or None) : The glossary to use.
-        tag_handling (literal or None) : How to handle tags.
-        outline_detection (bool or None) : Whether to detect outlines.
-        non_splitting_tags (string or list or None) : Tags that should not be split.
-        splitting_tags (string or list or None) : Tags that should be split.
-        ignore_tags (string or list or None) : Tags that should be ignored.
 
-        Returns:
-        result (string or list - string or TextResult or list - TextResult) : The translation result. A list of strings if the input was an iterable, a string otherwise. A list of TextResult objects if the response type is 'raw' and input was an iterable, a TextResult object otherwise.
-
+        :param text: The text to translate. It can be a string or an iterable of strings.
+        :type text: Union[str, Iterable[str]]
+        :param target_lang: The target language to translate to.
+        :type target_lang: Union[str, Language]
+        :param override_previous_settings: Whether to override the previous settings that were used during the last call to a DeepL translation function.
+        :type override_previous_settings: bool
+        :param decorator: The decorator to use when translating. Typically for exponential backoff retrying. If this parameter is None, DeepL will retry your request 5 times before failing. Otherwise, the given decorator will be used.
+        :type decorator: Callable or None
+        :param logging_directory: The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
+        :type logging_directory: Union[str, None]
+        :param response_type: The type of response to return. 'text' returns the translated text, 'raw' returns the raw response, a TextResult object.
+        :type response_type: Literal['text', 'raw']
+        :param semaphore: The number of concurrent requests to make. Default is 15.
+        :type semaphore: int
+        :param translation_delay: If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
+        :type translation_delay: Union[float, None]
+        :param source_lang: The source language to translate from.
+        :type source_lang: Union[str, Language, None]
+        :param context: Additional information for the translator to be considered when translating. Not translated itself. This is a DeepL alpha feature and may be removed at any time.
+        :type context: Union[str, None]
+        :param split_sentences: How to split sentences.
+        :type split_sentences: Literal['OFF', 'ALL', 'NO_NEWLINES', SplitSentences, None]
+        :param preserve_formatting: Whether to preserve formatting.
+        :type preserve_formatting: Union[bool, None]
+        :param formality: The formality level to use.
+        :type formality: Literal['default', 'more', 'less', 'prefer_more', 'prefer_less', Formality, None]
+        :param glossary: The glossary to use.
+        :type glossary: Union[str, GlossaryInfo, None]
+        :param tag_handling: How to handle tags.
+        :type tag_handling: Union[Literal['xml', 'html'], None]
+        :param outline_detection: Whether to detect outlines.
+        :type outline_detection: Union[bool, None]
+        :param non_splitting_tags: Tags that should not be split.
+        :type non_splitting_tags: Union[str, List[str], None]
+        :param splitting_tags: Tags that should be split.
+        :type splitting_tags: Union[str, List[str], None]
+        :param ignore_tags: Tags that should be ignored.
+        :type ignore_tags: Union[str, List[str], None]
+        :return: The translation result. A list of strings if the input was an iterable, a string otherwise. A list of TextResult objects if the response type is 'raw' and input was an iterable, a TextResult object otherwise.
+        :rtype: Union[List[str], str, List[TextResult], TextResult]
         """
 
         assert response_type in ["text", "raw"], InvalidResponseFormatException("Invalid response type specified. Must be 'text' or 'raw'.")
@@ -523,36 +566,41 @@ class EasyTL:
                         max_output_tokens:int | None=None) -> typing.Union[typing.List[str], str, GenerateContentResponse, typing.List[GenerateContentResponse]]:
         
         """
-
         Translates the given text using Gemini.
 
         This function assumes that the API key has already been set.
 
-        Translation instructions default to translating the text to English. To change this, specify the instructions.
+        :param text: The text to translate. It can be a string or an iterable of strings.
+        :type text: str or iterable
+        :param override_previous_settings: Whether to override the previous settings that were used during the last call to a Gemini translation function.
+        :type override_previous_settings: bool
+        :param decorator: The decorator to use when translating. Typically for exponential backoff retrying.
+        :type decorator: callable or None
+        :param logging_directory: The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
+        :type logging_directory: str or None
+        :param response_type: The type of response to return. 'text' returns the translated text, 'raw' returns the raw response, a GenerateContentResponse object, 'json' returns a json-parseable string. 'raw_json' returns the raw response, a GenerateContentResponse object, but with the content as a json-parseable string.
+        :type response_type: str, literal["text", "raw", "json", "raw_json"]
+        :param response_schema: The schema to use for the response. If None, no schema is used. This is only used if the response type is 'json' or 'json_raw'. EasyTL only validates the schema to the extend that it is None or a valid json. It does not validate the contents of the json.
+        :type response_schema: str or mapping or None
+        :param translation_delay: If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
+        :type translation_delay: float or None
+        :param translation_instructions: The translation instructions to use. If None, the default system message is used. If you plan on using the json response type, you must specify that you want a json output and it's format in the instructions. The default system message will ask for a generic json if the response type is json.
+        :type translation_instructions: str or None
+        :param model: The model to use. (E.g. 'gemini-pro' or 'gemini-pro-1.5-latest')
+        :type model: str
+        :param temperature: The temperature to use. The higher the temperature, the more creative the output. Lower temperatures are typically better for translation.
+        :type temperature: float
+        :param top_p: The nucleus sampling probability. The higher the value, the more words are considered for the next token. Generally, alter this or temperature, not both.
+        :type top_p: float
+        :param top_k: The top k tokens to consider. Generally, alter this or temperature or top_p, not all three.
+        :type top_k: int
+        :param stop_sequences: String sequences that will cause the model to stop translating if encountered, generally useless.
+        :type stop_sequences: list or None
+        :param max_output_tokens: The maximum number of tokens to output.
+        :type max_output_tokens: int or None
 
-        This function is not for use for real-time translation, nor for generating multiple translation candidates. Another function may be implemented for this given demand.
-
-        It is not known whether Gemini has backoff retrying implemented. Assume it does not exist. 
-        
-        Parameters:
-        text (string or iterable) : The text to translate.
-        override_previous_settings (bool) : Whether to override the previous settings that were used during the last call to a Gemini translation function.
-        decorator (callable or None) : The decorator to use when translating. Typically for exponential backoff retrying.
-        logging_directory (string or None) : The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
-        response_type (literal["text", "raw", "json", "raw_json"]) : The type of response to return. 'text' returns the translated text, 'raw' returns the raw response, a GenerateContentResponse object, 'json' returns a json-parseable string. 'raw_json' returns the raw response, a GenerateContentResponse object, but with the content as a json-parseable string.
-        response_schema (string or mapping or None) : The schema to use for the response. If None, no schema is used. This is only used if the response type is 'json' or 'json_raw'. EasyTL only validates the schema to the extend that it is None or a valid json. It does not validate the contents of the json.
-        translation_delay (float or None) : If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
-        translation_instructions (string or None) : The translation instructions to use. If None, the default system message is used. If you plan on using the json response type, you must specify that you want a json output and it's format in the instructions. The default system message will ask for a generic json if the response type is json.
-        model (string) : The model to use. (E.g. 'gemini-pro' or 'gemini-pro-1.5-latest')
-        temperature (float) : The temperature to use. The higher the temperature, the more creative the output. Lower temperatures are typically better for translation.
-        top_p (float) : The nucleus sampling probability. The higher the value, the more words are considered for the next token. Generally, alter this or temperature, not both.
-        top_k (int) : The top k tokens to consider. Generally, alter this or temperature or top_p, not all three.
-        stop_sequences (list or None) : String sequences that will cause the model to stop translating if encountered, generally useless.
-        max_output_tokens (int or None) : The maximum number of tokens to output.
-
-        Returns:
-        result (string or list - string or GenerateContentResponse or list - GenerateContentResponse) : The translation result. A list of strings if the input was an iterable, a string otherwise. A list of GenerateContentResponse objects if the response type is 'raw' and input was an iterable, a GenerateContentResponse object otherwise.
-
+        :returns: The translation result. A list of strings if the input was an iterable, a string otherwise. A list of GenerateContentResponse objects if the response type is 'raw' and input was an iterable, a GenerateContentResponse object otherwise.
+        :rtype: str or list[str] or GenerateContentResponse or list[GenerateContentResponse]
         """
 
         assert response_type in ["text", "raw", "json", "raw_json"], InvalidResponseFormatException("Invalid response type specified. Must be 'text', 'raw', 'json' or 'raw_json'.")
@@ -632,40 +680,50 @@ class EasyTL:
                                     max_output_tokens:int | None=None) -> typing.Union[typing.List[str], str, AsyncGenerateContentResponse, typing.List[AsyncGenerateContentResponse]]:
         
         """
-
         Asynchronous version of gemini_translate().
-        Will generally be faster for iterables. Order is preserved.
-
+        
         Translates the given text using Gemini.
-
+        
         This function assumes that the API key has already been set.
-
+        
         Translation instructions default to translating the text to English. To change this, specify the instructions.
-
+        
         This function is not for use for real-time translation, nor for generating multiple translation candidates. Another function may be implemented for this given demand.
-
+        
         It is not known whether Gemini has backoff retrying implemented. Assume it does not exist.
         
-        Parameters:
-        text (string or iterable) : The text to translate.
-        override_previous_settings (bool) : Whether to override the previous settings that were used during the last call to a Gemini translation function.
-        decorator (callable or None) : The decorator to use when translating. Typically for exponential backoff retrying.
-        logging_directory (string or None) : The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
-        response_type (literal["text", "raw", "json", "raw_json"]) : The type of response to return. 'text' returns the translated text, 'raw' returns the raw response, an AsyncGenerateContentResponse object, 'json' returns a json-parseable string. 'raw_json' returns the raw response, an AsyncGenerateContentResponse object, but with the content as a json-parseable string.
-        response_schema (string or mapping or None) : The schema to use for the response. If None, no schema is used. This is only used if the response type is 'json' or 'json_raw'. EasyTL only validates the schema to the extend that it is None or a valid json. It does not validate the contents of the json.
-        semaphore (int) : The number of concurrent requests to make. Default is 5 for 1.0 and 2 for 1.5 gemini models. For Gemini, it is recommend to use translation_delay along with the semaphore to prevent rate limiting.
-        translation_delay (float or None) : If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
-        translation_instructions (string or None) : The translation instructions to use. If None, the default system message is used. If you plan on using the json response type, you must specify that you want a json output and it's format in the instructions. The default system message will ask for a generic json if the response type is json.
-        model (string) : The model to use. (E.g. 'gemini-pro' or 'gemini-pro-1.5-latest')
-        temperature (float) : The temperature to use. The higher the temperature, the more creative the output. Lower temperatures are typically better for translation.
-        top_p (float) : The nucleus sampling probability. The higher the value, the more words are considered for the next token. Generally, alter this or temperature, not both.
-        top_k (int) : The top k tokens to consider. Generally, alter this or temperature or top_p, not all three.
-        stop_sequences (list or None) : String sequences that will cause the model to stop translating if encountered, generally useless.
-        max_output_tokens (int or None) : The maximum number of tokens to output.
-
-        Returns:
-        result (string or list - string or AsyncGenerateContentResponse or list - AsyncGenerateContentResponse) : The translation result. A list of strings if the input was an iterable, a string otherwise. A list of AsyncGenerateContentResponse objects if the response type is 'raw' and input was an iterable, a AsyncGenerateContentResponse object otherwise.
-
+        :param text: The text to translate. Can be a string or an iterable of strings.
+        :type text: str or iterable
+        :param override_previous_settings: Whether to override the previous settings that were used during the last call to a Gemini translation function.
+        :type override_previous_settings: bool
+        :param decorator: The decorator to use when translating. Typically for exponential backoff retrying.
+        :type decorator: callable or None
+        :param logging_directory: The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
+        :type logging_directory: str or None
+        :param response_type: The type of response to return. 'text' returns the translated text, 'raw' returns the raw response, an AsyncGenerateContentResponse object, 'json' returns a json-parseable string. 'raw_json' returns the raw response, an AsyncGenerateContentResponse object, but with the content as a json-parseable string.
+        :type response_type: str
+        :param response_schema: The schema to use for the response. If None, no schema is used. This is only used if the response type is 'json' or 'json_raw'. EasyTL only validates the schema to the extend that it is None or a valid json. It does not validate the contents of the json.
+        :type response_schema: str or mapping or None
+        :param semaphore: The number of concurrent requests to make. Default is 5 for 1.0 and 2 for 1.5 gemini models. For Gemini, it is recommend to use translation_delay along with the semaphore to prevent rate limiting.
+        :type semaphore: int
+        :param translation_delay: If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
+        :type translation_delay: float or None
+        :param translation_instructions: The translation instructions to use. If None, the default system message is used. If you plan on using the json response type, you must specify that you want a json output and it's format in the instructions. The default system message will ask for a generic json if the response type is json.
+        :type translation_instructions: str or None
+        :param model: The model to use. (E.g. 'gemini-pro' or 'gemini-pro-1.5-latest')
+        :type model: str
+        :param temperature: The temperature to use. The higher the temperature, the more creative the output. Lower temperatures are typically better for translation.
+        :type temperature: float
+        :param top_p: The nucleus sampling probability. The higher the value, the more words are considered for the next token. Generally, alter this or temperature, not both.
+        :type top_p: float
+        :param top_k: The top k tokens to consider. Generally, alter this or temperature or top_p, not all three.
+        :type top_k: int
+        :param stop_sequences: String sequences that will cause the model to stop translating if encountered, generally useless.
+        :type stop_sequences: list or None
+        :param max_output_tokens: The maximum number of tokens to output.
+        :type max_output_tokens: int or None
+        :return: The translation result. A list of strings if the input was an iterable, a string otherwise. A list of AsyncGenerateContentResponse objects if the response type is 'raw' and input was an iterable, a AsyncGenerateContentResponse object otherwise.
+        :rtype: str or list or AsyncGenerateContentResponse
         """
 
         assert response_type in ["text", "raw", "json", "raw_json"], InvalidResponseFormatException("Invalid response type specified. Must be 'text', 'raw', 'json' or 'raw_json'.")
@@ -741,7 +799,6 @@ class EasyTL:
                         ) -> typing.Union[typing.List[str], str, typing.List[ChatCompletion], ChatCompletion]:
         
         """
-
         Translates the given text using OpenAI.
 
         This function assumes that the API key has already been set.
@@ -752,25 +809,37 @@ class EasyTL:
         
         This function is not for use for real-time translation, nor for generating multiple translation candidates. Another function may be implemented for this given demand.
 
-        Parameters:
-        text (string or iterable) : The text to translate.
-        override_previous_settings (bool) : Whether to override the previous settings that were used during the last call to an OpenAI translation function.
-        decorator (callable or None) : The decorator to use when translating. Typically for exponential backoff retrying. If this is None, OpenAI will retry the request twice if it fails.
-        logging_directory (string or None) : The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
-        response_type (literal["text", "raw", "json", "raw_json"]) : The type of response to return. 'text' returns the translated text, 'raw' returns the raw response, a ChatCompletion object, 'json' returns a json-parseable string. 'raw_json' returns the raw response, a ChatCompletion object, but with the content as a json-parseable string.
-        translation_delay (float or None) : If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
-        translation_instructions (string or SystemTranslationMessage or None) : The translation instructions to use. If None, the default system message is used. If you plan on using the json response type, you must specify that you want a json output and it's format in the instructions. The default system message will ask for a generic json if the response type is json.
-        model (string) : The model to use. (E.g. 'gpt-4', 'gpt-3.5-turbo-0125', 'gpt-4o', etc.)
-        temperature (float) : The temperature to use. The higher the temperature, the more creative the output. Lower temperatures are typically better for translation.
-        top_p (float) : The nucleus sampling probability. The higher the value, the more words are considered for the next token. Generally, alter this or temperature, not both.
-        stop (list or None) : String sequences that will cause the model to stop translating if encountered, generally useless.
-        max_tokens (int or None) : The maximum number of tokens to output.
-        presence_penalty (float) : The presence penalty to use. This penalizes the model from repeating the same content in the output. Shouldn't be messed with for translation.
-        frequency_penalty (float) : The frequency penalty to use. This penalizes the model from using the same words too frequently in the output. Shouldn't be messed with for translation.
+        :param text: The text to translate. It can be a string or an iterable of strings.
+        :type text: str or iterable
+        :param override_previous_settings: Whether to override the previous settings that were used during the last call to an OpenAI translation function.
+        :type override_previous_settings: bool
+        :param decorator: The decorator to use when translating. Typically for exponential backoff retrying. If this is None, OpenAI will retry the request twice if it fails.
+        :type decorator: callable or None
+        :param logging_directory: The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
+        :type logging_directory: str or None
+        :param response_type: The type of response to return. 'text' returns the translated text, 'raw' returns the raw response, a ChatCompletion object, 'json' returns a json-parseable string. 'raw_json' returns the raw response, a ChatCompletion object, but with the content as a json-parseable string.
+        :type response_type: str, literal["text", "raw", "json", "raw_json"]
+        :param translation_delay: If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
+        :type translation_delay: float or None
+        :param translation_instructions: The translation instructions to use. If None, the default system message is used. If you plan on using the json response type, you must specify that you want a json output and it's format in the instructions. The default system message will ask for a generic json if the response type is json.
+        :type translation_instructions: str or SystemTranslationMessage or None
+        :param model: The model to use. (E.g. 'gpt-4', 'gpt-3.5-turbo-0125', 'gpt-4o', etc.)
+        :type model: str
+        :param temperature: The temperature to use. The higher the temperature, the more creative the output. Lower temperatures are typically better for translation.
+        :type temperature: float
+        :param top_p: The nucleus sampling probability. The higher the value, the more words are considered for the next token. Generally, alter this or temperature, not both.
+        :type top_p: float
+        :param stop: String sequences that will cause the model to stop translating if encountered, generally useless.
+        :type stop: list or None
+        :param max_tokens: The maximum number of tokens to output.
+        :type max_tokens: int or None
+        :param presence_penalty: The presence penalty to use. This penalizes the model from repeating the same content in the output. Shouldn't be messed with for translation.
+        :type presence_penalty: float
+        :param frequency_penalty: The frequency penalty to use. This penalizes the model from using the same words too frequently in the output. Shouldn't be messed with for translation.
+        :type frequency_penalty: float
 
-        Returns:
-        result (string or list - string or ChatCompletion or list - ChatCompletion) : The translation result. A list of strings if the input was an iterable, a string otherwise. A list of ChatCompletion objects if the response type is 'raw' and input was an iterable, a ChatCompletion object otherwise.
-
+        :return: The translation result. A list of strings if the input was an iterable, a string otherwise. A list of ChatCompletion objects if the response type is 'raw' and input was an iterable, a ChatCompletion object otherwise.
+        :rtype: str or list[str] or ChatCompletion or list[ChatCompletion]
         """
 
         assert response_type in ["text", "raw", "json", "raw_json"], InvalidResponseFormatException("Invalid response type specified. Must be 'text', 'raw', 'json' or 'raw_json'.")
@@ -852,40 +921,43 @@ class EasyTL:
                                     ) -> typing.Union[typing.List[str], str, typing.List[ChatCompletion], ChatCompletion]:
         
         """
-
         Asynchronous version of openai_translate().
-        Will generally be faster for iterables. Order is preserved.
 
         Translates the given text using OpenAI.
 
-        This function assumes that the API key has already been set.
+        :param text: The text to translate. It can be a string or an iterable of strings.
+        :type text: Union[str, Iterable[str]]
+        :param override_previous_settings: Whether to override the previous settings that were used during the last call to an OpenAI translation function.
+        :type override_previous_settings: bool
+        :param decorator: The decorator to use when translating. Typically for exponential backoff retrying. If this is None, OpenAI will retry the request twice if it fails.
+        :type decorator: Callable or None
+        :param logging_directory: The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
+        :type logging_directory: str or None
+        :param response_type: The type of response to return. 'text' returns the translated text, 'raw' returns the raw response, a ChatCompletion object, 'json' returns a json-parseable string. 'raw_json' returns the raw response, a ChatCompletion object, but with the content as a json-parseable string.
+        :type response_type: Literal["text", "raw", "json", "raw_json"]
+        :param semaphore: The number of concurrent requests to make. Default is 5.
+        :type semaphore: int
+        :param translation_delay: If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
+        :type translation_delay: float or None
+        :param translation_instructions: The translation instructions to use. If None, the default system message is used. If you plan on using the json response type, you must specify that you want a json output and it's format in the instructions. The default system message will ask for a generic json if the response type is json.
+        :type translation_instructions: str or SystemTranslationMessage or None
+        :param model: The model to use. (E.g. 'gpt-4', 'gpt-3.5-turbo-0125', 'gpt-4o', etc.)
+        :type model: str
+        :param temperature: The temperature to use. The higher the temperature, the more creative the output. Lower temperatures are typically better for translation.
+        :type temperature: float
+        :param top_p: The nucleus sampling probability. The higher the value, the more words are considered for the next token. Generally, alter this or temperature, not both.
+        :type top_p: float
+        :param stop: String sequences that will cause the model to stop translating if encountered, generally useless.
+        :type stop: List[str] or None
+        :param max_tokens: The maximum number of tokens to output.
+        :type max_tokens: int or None
+        :param presence_penalty: The presence penalty to use. This penalizes the model from repeating the same content in the output. Shouldn't be messed with for translation.
+        :type presence_penalty: float
+        :param frequency_penalty: The frequency penalty to use. This penalizes the model from using the same words too frequently in the output. Shouldn't be messed with for translation.
+        :type frequency_penalty: float
 
-        Translation instructions default to translating the text to English. To change this, specify the instructions.
-
-        Due to how OpenAI's API works, NOT_GIVEN is treated differently than None. If a parameter is set to NOT_GIVEN, it is not passed to the API. If it is set to None, it is passed to the API as None.
-
-        This function is not for use for real-time translation, nor for generating multiple translation candidates. Another function may be implemented for this given demand.
-
-        Parameters:
-        text (string or iterable) : The text to translate.
-        override_previous_settings (bool) : Whether to override the previous settings that were used during the last call to an OpenAI translation function.
-        decorator (callable or None) : The decorator to use when translating. Typically for exponential backoff retrying. If this is None, OpenAI will retry the request twice if it fails.
-        logging_directory (string or None) : The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
-        response_type (literal["text", "raw", "json", "raw_json"]) : The type of response to return. 'text' returns the translated text, 'raw' returns the raw response, a ChatCompletion object, 'json' returns a json-parseable string. 'raw_json' returns the raw response, a ChatCompletion object, but with the content as a json-parseable string.
-        semaphore (int) : The number of concurrent requests to make. Default is 5.
-        translation_delay (float or None) : If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
-        translation_instructions (string or SystemTranslationMessage or None) : The translation instructions to use. If None, the default system message is used. If you plan on using the json response type, you must specify that you want a json output and it's format in the instructions. The default system message will ask for a generic json if the response type is json.
-        model (string) : The model to use. (E.g. 'gpt-4', 'gpt-3.5-turbo-0125', 'gpt-4o', etc.)
-        temperature (float) : The temperature to use. The higher the temperature, the more creative the output. Lower temperatures are typically better for translation.
-        top_p (float) : The nucleus sampling probability. The higher the value, the more words are considered for the next token. Generally, alter this or temperature, not both.
-        stop (list or None) : String sequences that will cause the model to stop translating if encountered, generally useless.
-        max_tokens (int or None) : The maximum number of tokens to output.
-        presence_penalty (float) : The presence penalty to use. This penalizes the model from repeating the same content in the output. Shouldn't be messed with for translation.
-        frequency_penalty (float) : The frequency penalty to use. This penalizes the model from using the same words too frequently in the output. Shouldn't be messed with for translation.
-
-        Returns:
-        result (string or list - string or ChatCompletion or list - ChatCompletion) : The translation result. A list of strings if the input was an iterable, a string otherwise. A list of ChatCompletion objects if the response type is 'raw' and input was an iterable, a ChatCompletion object otherwise.
-        
+        :return: The translation result. A list of strings if the input was an iterable, a string otherwise. A list of ChatCompletion objects if the response type is 'raw' and input was an iterable, a ChatCompletion object otherwise.
+        :rtype: Union[List[str], str, List[ChatCompletion], ChatCompletion]
         """
 
         assert response_type in ["text", "raw", "json", "raw_json"], InvalidResponseFormatException("Invalid response type specified. Must be 'text', 'raw', 'json' or 'raw_json'.")
@@ -1105,42 +1177,52 @@ class EasyTL:
                                                                                                     AnthropicToolsBetaMessage, typing.List[AnthropicToolsBetaMessage]]:
         
         """
-
         Asynchronous version of anthropic_translate().
-        Will generally be faster for iterables. Order is preserved.
-
+        
         Translates the given text using Anthropic.
-
+        
         This function assumes that the API key has already been set.
-
+        
         Translation instructions default to translating the text to English. To change this, specify the instructions.
-
+        
         This function is not for use for real-time translation, nor for generating multiple translation candidates. Another function may be implemented for this given demand.
-
+        
         Due to how Anthropic's API works, NOT_GIVEN is treated differently than None. If a parameter is set to NOT_GIVEN, it is not passed to the API.
-
+        
         Anthropic's JSON response is quite unsophisticated and also in Beta, it costs a lot of extra tokens to return a json response. It's also inconsistent. Be careful when using it.
-
-        Parameters:
-        text (string | ModelTranslationMessage or iterable) : The text to translate.
-        override_previous_settings (bool) : Whether to override the previous settings that were used during the last call to an Anthropic translation function.
-        decorator (callable or None) : The decorator to use when translating. Typically for exponential backoff retrying. If this is None, Anthropic will retry the request twice if it fails.
-        logging_directory (string or None) : The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
-        response_type (literal["text", "raw", "json", "raw_json"]) : The type of response to return. 'text' returns the translated text, 'raw' returns the raw response, an AnthropicMessage object, 'json' returns a json-parseable string. 'raw_json' returns the raw response, an AnthropicMessage object, but with the content as a json-parseable string.
-        response_schema (string or mapping or None) : The schema to use for the response. If None, no schema is used. This is only used if the response type is 'json' or 'json_raw'. EasyTL only validates the schema to the extend that it is None or a valid json. It does not validate the contents of the json.
-        semaphore (int) : The number of concurrent requests to make. Default is 5.
-        translation_delay (float or None) : If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
-        translation_instructions (string or SystemTranslationMessage or None) : The translation instructions to use. If None, the default system message is used. If you plan on using the json response type, you must specify that you want a json output and it's format in the instructions. The default system message will ask for a generic json if the response type is json.
-        model (string) : The model to use. (E.g. 'claude-3-haiku-20240307', 'claude-3-sonnet-20240229' or 'claude-3-opus-20240229')
-        temperature (float or NotGiven) : The temperature to use. The higher the temperature, the more creative the output. Lower temperatures are typically better for translation.
-        top_p (float or NotGiven) : The nucleus sampling probability. The higher the value, the more words are considered for the next token. Generally, alter this or temperature, not both.
-        top_k (int or NotGiven) : The top k tokens to consider. Generally, alter this or temperature or top_p, not all three.
-        stop_sequences (list or NotGiven) : String sequences that will cause the model to stop translating if encountered, generally useless.
-        max_output_tokens (int or NotGiven) : The maximum number of tokens to output.
-
-        Returns:
-        result (string or list - string or AnthropicMessage or list - AnthropicMessage or AnthropicToolsBetaMessage or list - AnthropicToolsBetaMessage) : The translation result. A list of strings if the input was an iterable, a string otherwise. A list of AnthropicMessage objects if the response type is 'raw' and input was an iterable, an AnthropicMessage object otherwise. A list of AnthropicToolsBetaMessage objects if the response type is 'raw' and input was an iterable, an AnthropicToolsBetaMessage object otherwise.
-
+        
+        :param text: The text to translate. It can be a string, a ModelTranslationMessage, or an iterable of strings or ModelTranslationMessages.
+        :type text: Union[str, typing.Iterable[str], ModelTranslationMessage, typing.Iterable[ModelTranslationMessage]]
+        :param override_previous_settings: Whether to override the previous settings that were used during the last call to an Anthropic translation function.
+        :type override_previous_settings: bool, optional
+        :param decorator: The decorator to use when translating. Typically for exponential backoff retrying. If this is None, Anthropic will retry the request twice if it fails.
+        :type decorator: Callable or None, optional
+        :param logging_directory: The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
+        :type logging_directory: str or None, optional
+        :param response_type: The type of response to return. 'text' returns the translated text, 'raw' returns the raw response, an AnthropicMessage object, 'json' returns a json-parseable string. 'raw_json' returns the raw response, an AnthropicMessage object, but with the content as a json-parseable string.
+        :type response_type: Literal["text", "raw", "json", "raw_json"] or None, optional
+        :param response_schema: The schema to use for the response. If None, no schema is used. This is only used if the response type is 'json' or 'json_raw'. EasyTL only validates the schema to the extend that it is None or a valid json. It does not validate the contents of the json.
+        :type response_schema: str or typing.Mapping[str, typing.Any] or None, optional
+        :param semaphore: The number of concurrent requests to make. Default is 5.
+        :type semaphore: int or None, optional
+        :param translation_delay: If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
+        :type translation_delay: float or None, optional
+        :param translation_instructions: The translation instructions to use. If None, the default system message is used. If you plan on using the json response type, you must specify that you want a json output and it's format in the instructions. The default system message will ask for a generic json if the response type is json.
+        :type translation_instructions: str or SystemTranslationMessage or None, optional
+        :param model: The model to use. (E.g. 'claude-3-haiku-20240307', 'claude-3-sonnet-20240229' or 'claude-3-opus-20240229')
+        :type model: str, optional
+        :param temperature: The temperature to use. The higher the temperature, the more creative the output. Lower temperatures are typically better for translation.
+        :type temperature: float or NotGiven, optional
+        :param top_p: The nucleus sampling probability. The higher the value, the more words are considered for the next token. Generally, alter this or temperature, not both.
+        :type top_p: float or NotGiven, optional
+        :param top_k: The top k tokens to consider. Generally, alter this or temperature or top_p, not all three.
+        :type top_k: int or NotGiven, optional
+        :param stop_sequences: String sequences that will cause the model to stop translating if encountered, generally useless.
+        :type stop_sequences: List[str] or NotGiven, optional
+        :param max_output_tokens: The maximum number of tokens to output.
+        :type max_output_tokens: int or NotGiven, optional
+        :return: The translation result. A list of strings if the input was an iterable, a string otherwise. A list of AnthropicMessage objects if the response type is 'raw' and input was an iterable, an AnthropicMessage object otherwise. A list of AnthropicToolsBetaMessage objects if the response type is 'raw' and input was an iterable, an AnthropicToolsBetaMessage object otherwise.
+        :rtype: Union[List[str], str, AnthropicMessage, List[AnthropicMessage], AnthropicToolsBetaMessage, List[AnthropicToolsBetaMessage]]
         """
 
         assert response_type in ["text", "raw", "json", "raw_json"], InvalidResponseFormatException("Invalid response type specified. Must be 'text', 'raw', 'json' or 'raw_json'.")
@@ -1225,31 +1307,38 @@ class EasyTL:
                         source_lang:str | None = None) -> typing.Union[typing.List[str], str]:
         
         """
-
         Translates the given text to the target language using Azure.
 
         This function assumes that the API key has already been set.
 
-        It is unknown whether Azure Translate has backoff retrying implemented. Assume it does not  exist
+        It is unknown whether Azure Translate has backoff retrying implemented. Assume it does not exist.
 
         Default api_version, azure_region, and azure_endpoint values should be fine for most users.
-        
-        Parameters:
-        text (string or iterable) : The text to translate.
-        target_lang (string) : The target language for translation. Default is 'en'. These are ISO 639-1 language codes
-        override_previous_settings (bool) : Whether to override the previous settings that were used during the last call to an Azure translation function.
-        decorator (callable or None) : The decorator to use when translating. Typically for exponential backoff retrying. 
-        logging_directory (string or None) : The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
-        response_type (literal["text", "json"]) : The type of response to return. 'text' returns the translated text, 'json' returns the original response in json format.
-        translation_delay (float or None) : If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
-        api_version (string) : The version of the Azure Translator API. Default is '3.0'.
-        azure_region (string) : The Azure region to use for translation. Default is 'global'.
-        azure_endpoint (string) : The Azure Translator API endpoint. Default is 'https://api.cognitive.microsofttranslator.com/'.
-        source_lang (string or None) : The source language of the text. If None, the service will attempt to detect the language.
 
-        Returns:
-        result (string or list - string) : The translation result. A list of strings if the input was an iterable, a string otherwise.
-
+        :param text: The text to translate. It can be a string or an iterable of strings.
+        :type text: str or iterable
+        :param target_lang: The target language for translation. Default is 'en'. These are ISO 639-1 language codes.
+        :type target_lang: str
+        :param override_previous_settings: Whether to override the previous settings that were used during the last call to an Azure translation function.
+        :type override_previous_settings: bool
+        :param decorator: The decorator to use when translating. Typically for exponential backoff retrying.
+        :type decorator: callable or None
+        :param logging_directory: The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
+        :type logging_directory: str or None
+        :param response_type: The type of response to return. 'text' returns the translated text, 'json' returns the original response in json format.
+        :type response_type: literal["text", "json"]
+        :param translation_delay: If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
+        :type translation_delay: float or None
+        :param api_version: The version of the Azure Translator API. Default is '3.0'.
+        :type api_version: str
+        :param azure_region: The Azure region to use for translation. Default is 'global'.
+        :type azure_region: str
+        :param azure_endpoint: The Azure Translator API endpoint. Default is 'https://api.cognitive.microsofttranslator.com/'.
+        :type azure_endpoint: str
+        :param source_lang: The source language of the text. If None, the service will attempt to detect the language.
+        :type source_lang: str or None
+        :return: The translation result. A list of strings if the input was an iterable, a string otherwise.
+        :rtype: str or list[str]
         """
 
         assert response_type in ["text", "json"], InvalidResponseFormatException("Invalid response type specified. Must be 'text' or 'json'.")
@@ -1316,35 +1405,36 @@ class EasyTL:
                                     azure_endpoint:str = "https://api.cognitive.microsofttranslator.com/",
                                     source_lang:str | None = None) -> typing.Union[typing.List[str], str]:
         """
-
         Asynchronous version of azure_translate().
-        Will generally be faster for iterables. Order is preserved.
 
         Translates the given text to the target language using Azure.
 
-        This function assumes that the API key has already been set.
-
-        It is unknown whether Azure Translate has backoff retrying implemented. Assume it does not  exist
-
-        Default api_version, azure_region, and azure_endpoint values should be fine for most users.
-
-        Parameters:
-        text (string or iterable) : The text to translate.
-        target_lang (string) : The target language for translation. Default is 'en'. These are ISO 639-1 language codes
-        override_previous_settings (bool) : Whether to override the previous settings that were used during the last call to an Azure translation function.
-        decorator (callable or None) : The decorator to use when translating. Typically for exponential backoff retrying.
-        logging_directory (string or None) : The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
-        response_type (literal["text", "json"]) : The type of response to return. 'text' returns the translated text, 'json' returns the original response in json format.
-        semaphore (int) : The number of concurrent requests to make. Default is 15.
-        translation_delay (float or None) : If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
-        api_version (string) : The version of the Azure Translator API. Default is '3.0'.
-        azure_region (string) : The Azure region to use for translation. Default is 'global'.
-        azure_endpoint (string) : The Azure Translator API endpoint. Default is 'https://api.cognitive.microsofttranslator.com/'.
-        source_lang (string or None) : The source language of the text. If None, the service will attempt to detect the language.
-
-        Returns:
-        result (string or list - string) : The translation result. A list of strings if the input was an iterable, a string otherwise.
-        
+        :param text: The text to translate. It can be a string or an iterable of strings.
+        :type text: str or iterable
+        :param target_lang: The target language for translation. Default is 'en'. These are ISO 639-1 language codes.
+        :type target_lang: str
+        :param override_previous_settings: Whether to override the previous settings that were used during the last call to an Azure translation function.
+        :type override_previous_settings: bool
+        :param decorator: The decorator to use when translating. Typically for exponential backoff retrying.
+        :type decorator: callable or None
+        :param logging_directory: The directory to log to. If None, no logging is done. This'll append the text result and some function information to a file in the specified directory. File is created if it doesn't exist.
+        :type logging_directory: str or None
+        :param response_type: The type of response to return. 'text' returns the translated text, 'json' returns the original response in json format.
+        :type response_type: literal["text", "json"]
+        :param semaphore: The number of concurrent requests to make. Default is 15.
+        :type semaphore: int
+        :param translation_delay: If text is an iterable, the delay between each translation. Default is none. This is more important for asynchronous translations where a semaphore alone may not be sufficient.
+        :type translation_delay: float or None
+        :param api_version: The version of the Azure Translator API. Default is '3.0'.
+        :type api_version: str
+        :param azure_region: The Azure region to use for translation. Default is 'global'.
+        :type azure_region: str
+        :param azure_endpoint: The Azure Translator API endpoint. Default is 'https://api.cognitive.microsofttranslator.com/'.
+        :type azure_endpoint: str
+        :param source_lang: The source language of the text. If None, the service will attempt to detect the language.
+        :type source_lang: str or None
+        :return: The translation result. A list of strings if the input was an iterable, a string otherwise.
+        :rtype: str or list[str]
         """
 
         assert response_type in ["text", "json"], InvalidResponseFormatException("Invalid response type specified. Must be 'text' or 'json'.")
@@ -1429,13 +1519,13 @@ class EasyTL:
         Anthropic: AnthropicMessage or AnthropicToolsBetaMessage
         Azure: str
 
-        Parameters:
-        service (string) : The service to use for translation.
-        text (string) : The text to translate.
-        **kwargs : The keyword arguments to pass to the translation function.
-
-        Returns:
-        result (string or list - string or TextResult or list - TextResult or GenerateContentResponse or list - GenerateContentResponse or ChatCompletion or list - ChatCompletion or any or list - any or AnthropicMessage or list - AnthropicMessage or AnthropicToolsBetaMessage or list - AnthropicToolsBetaMessage) : The translation result. A list of strings if the input was an iterable, a string otherwise. A list of TextResult objects if the response type is 'raw' and input was an iterable, a TextResult object otherwise. A list of GenerateContentResponse objects if the response type is 'raw' and input was an iterable, a GenerateContentResponse object otherwise. A list of ChatCompletion objects if the response type is 'raw' and input was an iterable, a ChatCompletion object otherwise. A list of any objects if the response type is 'raw' and input was an iterable, an any object otherwise. A list of AnthropicMessage objects if the response type is 'raw' and input was an iterable, an AnthropicMessage object otherwise. A list of AnthropicToolsBetaMessage objects if the response type is 'raw' and input was an iterable, an AnthropicToolsBetaMessage object otherwise.
+        :param service: The service to use for translation.
+        :type service: str
+        :param text: The text to translate.
+        :type text: str or typing.Iterable[str]
+        :param **kwargs: The keyword arguments to pass to the translation function.
+        :returns: The translation result. A list of strings if the input was an iterable, a string otherwise. A list of TextResult objects if the response type is 'raw' and input was an iterable, a TextResult object otherwise. A list of GenerateContentResponse objects if the response type is 'raw' and input was an iterable, a GenerateContentResponse object otherwise. A list of ChatCompletion objects if the response type is 'raw' and input was an iterable, a ChatCompletion object otherwise. A list of any objects if the response type is 'raw' and input was an iterable, an any object otherwise. A list of AnthropicMessage objects if the response type is 'raw' and input was an iterable, an AnthropicMessage object otherwise. A list of AnthropicToolsBetaMessage objects if the response type is 'raw' and input was an iterable, an AnthropicToolsBetaMessage object otherwise.
+        :rtype: str or typing.List[str] or TextResult or typing.List[TextResult] or GenerateContentResponse or typing.List[GenerateContentResponse] or ChatCompletion or typing.List[ChatCompletion] or typing.Any or typing.List[typing.Any] or AnthropicMessage or typing.List[AnthropicMessage] or AnthropicToolsBetaMessage or typing.List[AnthropicToolsBetaMessage]
 
         """
 
@@ -1473,38 +1563,37 @@ class EasyTL:
 
         
         """
+        Asynchronous version of :meth:`translate`.
 
-        Asynchronous version of translate().
-        
         Translates the given text to the target language using the specified service.
         This function assumes that the API key has already been set.
-        translate_async() will generally be faster for iterables. Order is preserved.
+        :meth:`translate_async` will generally be faster for iterables. Order is preserved.
 
         Please see the documentation for the specific translation function for the service you want to use.
 
-        DeepL: deepl_translate_async()
-        OpenAI: openai_translate_async() 
-        Gemini: gemini_translate_async() 
-        Google Translate: googletl_translate_async()
-        Anthropic: anthropic_translate_async()
-        Azure: azure_translate_async()
+        - DeepL: :meth:`deepl_translate_async`
+        - OpenAI: :meth:`openai_translate_async`
+        - Gemini: :meth:`gemini_translate_async`
+        - Google Translate: :meth:`googletl_translate_async`
+        - Anthropic: :meth:`anthropic_translate_async`
+        - Azure: :meth:`azure_translate_async`
 
         All functions can return a list of strings or a string, depending on the input. The response type can be specified to return the raw response instead:
-        DeepL: TextResult
-        OpenAI: ChatCompletion
-        Gemini: AsyncGenerateContentResponse
-        Google Translate: any
-        Anthropic: AnthropicMessage or AnthropicToolsBetaMessage
-        Azure: str
 
-        Parameters:
-        service (string) : The service to use for translation.
-        text (string) : The text to translate.
-        **kwargs : The keyword arguments to pass to the translation function.
+        - DeepL: :class:`TextResult`
+        - OpenAI: :class:`ChatCompletion`
+        - Gemini: :class:`AsyncGenerateContentResponse`
+        - Google Translate: any
+        - Anthropic: :class:`AnthropicMessage` or :class:`AnthropicToolsBetaMessage`
+        - Azure: str
 
-        Returns:
-        result (string or list - string or TextResult or list - TextResult or AsyncGenerateContentResponse or list - AsyncGenerateContentResponse or ChatCompletion or list - ChatCompletion or any or list - any or AnthropicMessage or list - AnthropicMessage or AnthropicToolsBetaMessage or list - AnthropicToolsBetaMessage) : The translation result. A list of strings if the input was an iterable, a string otherwise. A list of TextResult objects if the response type is 'raw' and input was an iterable, a TextResult object otherwise. A list of AsyncGenerateContentResponse objects if the response type is 'raw' and input was an iterable, an AsyncGenerateContentResponse object otherwise. A list of ChatCompletion objects if the response type is 'raw' and input was an iterable, a ChatCompletion object otherwise. A list of any objects if the response type is 'raw' and input was an iterable, an any object otherwise. A list of AnthropicMessage objects if the response type is 'raw' and input was an iterable, an AnthropicMessage object otherwise. A list of AnthropicToolsBetaMessage objects if the response type is 'raw' and input was an iterable, an AnthropicToolsBetaMessage object otherwise.
-
+        :param service: The service to use for translation.
+        :type service: str
+        :param text: The text to translate.
+        :type text: str or typing.Iterable[str]
+        :param kwargs: The keyword arguments to pass to the translation function.
+        :return: The translation result. A list of strings if the input was an iterable, a string otherwise. A list of :class:`TextResult` objects if the response type is 'raw' and input was an iterable, a :class:`TextResult` object otherwise. A list of :class:`AsyncGenerateContentResponse` objects if the response type is 'raw' and input was an iterable, an :class:`AsyncGenerateContentResponse` object otherwise. A list of :class:`ChatCompletion` objects if the response type is 'raw' and input was an iterable, a :class:`ChatCompletion` object otherwise. A list of any objects if the response type is 'raw' and input was an iterable, an any object otherwise. A list of :class:`AnthropicMessage` objects if the response type is 'raw' and input was an iterable, an :class:`AnthropicMessage` object otherwise. A list of :class:`AnthropicToolsBetaMessage` objects if the response type is 'raw' and input was an iterable, an :class:`AnthropicToolsBetaMessage` object otherwise.
+        :rtype: typing.Union[typing.List[str], str, typing.List[TextResult], TextResult, typing.List[ChatCompletion], ChatCompletion, typing.List[AsyncGenerateContentResponse], AsyncGenerateContentResponse, typing.List[typing.Any], typing.Any, typing.List[AnthropicMessage], AnthropicMessage, typing.List[AnthropicToolsBetaMessage], AnthropicToolsBetaMessage]terable, an AnthropicMessage object otherwise. A list of AnthropicToolsBetaMessage objects if the response type is 'raw' and input was an iterable, an AnthropicToolsBetaMessage object otherwise.
         """
 
         assert service in ["deepl", "openai", "gemini", "google translate", "anthropic", "azure"], InvalidAPITypeException("Invalid service specified. Must be 'deepl', 'openai', 'gemini', 'google translate', 'anthropic' or 'azure'.")
@@ -1537,29 +1626,26 @@ class EasyTL:
                        ) -> typing.Tuple[int, float, str]:
         
         """
-
         Calculates the cost of translating the given text using the specified service.
 
         For LLMs, the cost is based on the default model unless specified.
 
-        Model and Translation Instructions are ignored for DeepL, Google Translate and Azure.
+        Model and Translation Instructions are ignored for DeepL, Google Translate, and Azure.
 
-        For DeepL, Azure and Google Translate, the number of tokens is the number of characters in the text. The returned model is the name of the service.
+        For DeepL, Azure, and Google Translate, the number of tokens is the number of characters in the text. The returned model is the name of the service.
 
+        Note that Anthropic's cost estimate is pretty sketchy and can be inaccurate. Refer to the actual response object for the cost or the API panel. This is because their tokenizer is not public, and we're forced to estimate.
 
-        Note that Anthropic's cost estimate is pretty sketchy and can be inaccurate. Refer to the actual response object for the cost or the API panel. This is because their tokenizer is not public and we're forced to estimate.
-
-        Parameters:
-        text (string or iterable) : The text to translate.
-        service (string) : The service to use for translation.
-        model (string or None) : The model to use for translation. If None, the default model is used.
-        translation_instructions (string or None) : The translation instructions to use.
-
-        Returns:
-        num_tokens (int) : The number of tokens/characters in the text.
-        cost (float) : The cost of translating the text.
-        model (string) : The model used for translation.
-
+        :param text: The text to translate.
+        :type text: str or iterable
+        :param service: The service to use for translation.
+        :type service: str
+        :param model: The model to use for translation. If None, the default model is used.
+        :type model: str or None
+        :param translation_instructions: The translation instructions to use.
+        :type translation_instructions: str or None
+        :return: The number of tokens/characters in the text, the cost of translating the text, and the model used for translation.
+        :rtype: tuple[int, float, str]
         """
 
         assert service in ["deepl", "openai", "gemini", "google translate", "anthropic", "azure"], InvalidAPITypeException("Invalid service specified. Must be 'deepl', 'openai', 'gemini', 'google translate', 'anthropic' or 'azure'.")
