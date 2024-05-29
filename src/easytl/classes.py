@@ -2,6 +2,10 @@
 ## Use of this source code is governed by an GNU Lesser General Public License v2.1
 ## license that can be found in the LICENSE file.
 
+"""
+This module contains classes related to translation messages used in the EasyTL project.
+"""
+
 ## built-in libraries
 from typing_extensions import override
 
@@ -27,11 +31,8 @@ from anthropic.types.beta.tools import ToolUseBlock as AnthropicToolUseBlock
 ##-------------------start-of-Message--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 class Message:
-
     """
-
     Message is a class that is used to send translation batches to the OpenAI API.
-
     """
 
     def __init__(self, content: str):
@@ -60,11 +61,8 @@ class Message:
 ##-------------------start-of-SystemTranslationMessage--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 class SystemTranslationMessage(Message):
-
     """
-
     SystemTranslationMessage is a class that is used to send the system message to the OpenAI API.
-
     """
 
     @property
@@ -74,11 +72,8 @@ class SystemTranslationMessage(Message):
 ##-------------------start-of-ModelTranslationMessage--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 class ModelTranslationMessage(Message):
-
     """
-
     ModelTranslationMessage is a class that is used to send the model/user message to the OpenAI API.
-    
     """
     
     @property
@@ -88,26 +83,23 @@ class ModelTranslationMessage(Message):
 ##-------------------start-of-NotGiven--------------------------------------------------------------------------------------------------------------------------------------------------------------------------    
 
 class NotGiven:
-
     """
     A sentinel singleton class used to distinguish omitted keyword arguments
     from those passed in with the value None (which may have different behavior).
 
     Used until PEP 0661 is accepted
-    
+
     For example:
 
-    ```py
-    def get(timeout: Union[int, NotGiven, None] = NotGiven()) -> Response:
-        ...
+    .. code-block:: python
 
+        def get(timeout: Union[int, NotGiven, None] = NotGiven()) -> Response:
+            ...
 
-    get(timeout=1)  # 1s timeout
-    get(timeout=None)  # No timeout
-    get()  # Default timeout behavior, which may not be statically known at the method definition.
-    ```
+        get(timeout=1) # 1s timeout
+        get(timeout=None) # No timeout
+        get() # Default timeout behavior, which may not be statically known at the method definition.
     """
-
     def __bool__(self) -> typing.Literal[False]:
         return False
 
