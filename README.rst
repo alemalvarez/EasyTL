@@ -1,28 +1,39 @@
-   ---------------------------------------------------------------------------------------------------------------------------------------------------
-**Table of Contents**
+********
+EasyTL
+********
 
-- `Quick Start <#quick-start>`_
-- `Installation <#installation>`_
-- `Features <#features>`_
-- `API Usage <#api-usage>`_
-- `License <#license>`_
-- `Contact <#contact>`_
-- `Contribution <#contribution>`_
-- `Notes <#notes>`_
+
+Seamless Multi-API Translation: Simplifying Language Barriers with universal translation provider support.
+
+EasyTL provides a simple and consistent interface for translating text across multiple translation APIs. 🔄🔤 It offers a range of features to customize the translation process, manage costs, and validate credentials before submitting requests. ⚙️💰✔️
+
+Currently it supports **Anthropic, Azure Translation Service, DeepL, Gemini, Google Translate, and OpenAI**. 🤖💻 To request new services, please open an issue on the GitHub repository or contact Bikatr7@proton.me or alemalvarez@icloud.com. 📩✉️
+
+EasyTL has a Trello board for tracking planned features and issues: 📋🗂️
+
+https://trello.com/b/Td555CoW/easytl
+
+*****************
+Table of Contents
+*****************
+
+- `Quick Start <quick start_>`_
+- `Installation <installation_>`_
+- `Features <features_>`_
+- `API Usage <api usage_>`_
+- `License <license_>`_
+- `Contact <contact_>`_
+- `Contribution <contribution_>`_
+- `Notes <notes_>`_
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
-EasyTL
-======
 
-Seamless Multi-API Translation: Simplifying Language Barriers with DeepL, OpenAI, Gemini and Google Translate.
 
-EasyTL has a Trello board for tracking planned features and issues:
-https://trello.com/b/Td555CoW/easytl
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 **Quick Start**
----------------
+---------------------------------------------------------------------------------------------------------------------------------------------------
 
 To get started with EasyTL, install the package via pip:
 
