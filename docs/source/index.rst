@@ -10,13 +10,12 @@ Welcome to EasyTL's documentation!
    :caption: Contents:
 
    apikeys
-   usage
    easytl
 
 .. include:: ../../README.rst
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

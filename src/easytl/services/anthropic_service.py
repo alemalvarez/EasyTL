@@ -19,7 +19,32 @@ from ..util.constants import VALID_JSON_ANTHROPIC_MODELS
 
 
 class AnthropicService:
+    """
+    A service class that provides methods for interacting with the Anthropic API.
 
+    Attributes:
+    - _default_model (str): The default model to use for translation.
+    - _default_translation_instructions (str): The default translation instructions.
+    - _system (str | None): The translation instructions to use.
+    - _model (str): The model to use for translation.
+    - _temperature (float | NotGiven): The temperature parameter for translation.
+    - _top_p (float | NotGiven): The top-p parameter for translation.
+    - _top_k (int | NotGiven): The top-k parameter for translation.
+    - _stream (typing.Literal[False] | NotGiven): Whether to stream the translation results.
+    - _stop_sequences (typing.List[str] | NotGiven): List of stop sequences for translation.
+    - _max_tokens (int | NotGiven): The maximum number of tokens for translation.
+    - _semaphore_value (int): The value of the semaphore for rate limiting.
+    - _semaphore (asyncio.Semaphore): The semaphore for rate limiting.
+    - _sync_client: The synchronous Anthropic client.
+    - _async_client: The asynchronous Anthropic client.
+    - _rate_limit_delay (float | None): The delay for rate limiting.
+    - _decorator_to_use (typing.Union[typing.Callable, None]): The decorator to use for translation.
+    - _log_directory (str | None): The directory for logging.
+    - _json_mode (bool): Whether to use JSON mode for translation.
+    - _response_schema (typing.Mapping[str, typing.Any] | None): The response schema for translation.
+    - _json_tool (dict): The JSON tool configuration.
+    """
+    
     _default_model:str = "claude-3-haiku-20240307"
     _default_translation_instructions:str = "Please translate the following text into English."
 
