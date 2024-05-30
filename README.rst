@@ -13,6 +13,10 @@ EasyTL has a Trello board for tracking planned features and issues: 📋🗂️
 
 https://trello.com/b/Td555CoW/easytl
 
+We've compiled a repository of examples and use cases for EasyTL at this [GitHub repository](https://github.com/Bikatr7/easytl-demo)
+
+Full documentation [here](https://easytl.readthedocs.io/en/latest/index.html) (work in progress)
+
 *****************
 Table of Contents
 *****************
@@ -47,12 +51,37 @@ For example, with DeepL:
    from easytl import EasyTL
 
    ## Set your API key
-   EasyTL.set_credentials("deepl", "your_api_key_here")
+   EasyTL.set_credentials("deepl", "YOUR_API_KEY")
 
    ## You can also validate your API keys; translation functions will do this automatically
    is_valid, e = EasyTL.validate_credentials("deepl")
 
    translated_text = EasyTL.deepl_translate("私は日本語が話せます", "EN-US") ## Text to translate, language to translate to, only two "required" arguments but there are more optional arguments for additional functionality and other services.
+
+   print(translated_text) ## Output: "I can speak Japanese"
+
+
+or with OpenAI:
+
+.. code-block:: python
+
+   from easytl import EasyTL
+
+   import asyncio
+
+   async def main():
+
+    ## Set your API key
+    EasyTL.set_credentials("openai", "YOUR_API_KEY")
+
+    ## Get's the raw response from the API, allowing you to access the full response object
+    raw_response = await EasyTL.openai_translate_async("I can speak Japanese", model="gpt-4o", translation_instructions="Translate this text to Japanese.", response_type="raw") 
+
+    print(raw_response.choices[0].message.content) ## Output: "私は日本語が話せます" or something similar
+
+   if(__name__ == "__main__"):
+      asyncio.run(main())
+
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -107,13 +136,24 @@ EasyTL offers seamless integration with several translation APIs, allowing users
 
 Translating Text
 ~~~~~~~~~~~~~~~~
+Translate functions can be broken down into two categories: LLM and non-LLM. LLM ones can take instructions, while non-LLM ones require a target language. 
 
-Use `deepl_translate`, `googletl_translate`, `openai_translate`, or `gemini_translate` to translate text using the respective services. Each method accepts various parameters to customize the translation process, such as language, text format, and API-specific features like formality level or temperature for creative outputs.
+`deepl_translate`, `googletl_translate`, and `azure_translate` are non-LLM functions, while `openai_translate`, `gemini_translate`, and `anthropic_translate` are LLM functions.
+
+Each method accepts various parameters to customize the translation process, such as language, text format, and API-specific features like formality level or temperature. However these vary wildly between services, so it is recommended to check the documentation for each service for more information.
 
 All services offer asynchronous translation methods that return a future object for concurrent processing. These methods are suffixed with `_async` and can be awaited to retrieve the translated text.
 
-Instead of receiving the translated text directly, you can also use the `response` parameter to get the full response object from the API.
+Instead of receiving the translated text directly, you can also use the `response_type` parameter to get the raw response object, specify a json response where available, or both.
+  
+  `text` - Default. Returns the translated text.
 
+  `json` - Returns the response as a JSON object. Not all services support this.
+
+  `raw` - Returns the raw response object from the API. This can be useful for accessing additional information or debugging.
+  
+  `raw_json` - Returns the raw response object with the text but with the response also a json object. Again, not all services support this.
+  
 Generic Translation Methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
