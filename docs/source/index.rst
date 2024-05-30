@@ -12,7 +12,7 @@ Welcome to EasyTL's documentation!
    apikeys
    easytl
 
-.. include:: ../../README.rst
+.. include:: README.rst
 
 Indices and tables
 ------------------
