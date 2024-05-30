@@ -1523,7 +1523,7 @@ class EasyTL:
         :type service: str
         :param text: The text to translate.
         :type text: str or typing.Iterable[str]
-        :param **kwargs: The keyword arguments to pass to the translation function.
+        :param ~*~*kwargs: The keyword arguments to pass to the translation function.
         :returns: The translation result. A list of strings if the input was an iterable, a string otherwise. A list of TextResult objects if the response type is 'raw' and input was an iterable, a TextResult object otherwise. A list of GenerateContentResponse objects if the response type is 'raw' and input was an iterable, a GenerateContentResponse object otherwise. A list of ChatCompletion objects if the response type is 'raw' and input was an iterable, a ChatCompletion object otherwise. A list of any objects if the response type is 'raw' and input was an iterable, an any object otherwise. A list of AnthropicMessage objects if the response type is 'raw' and input was an iterable, an AnthropicMessage object otherwise. A list of AnthropicToolsBetaMessage objects if the response type is 'raw' and input was an iterable, an AnthropicToolsBetaMessage object otherwise.
         :rtype: str or typing.List[str] or TextResult or typing.List[TextResult] or GenerateContentResponse or typing.List[GenerateContentResponse] or ChatCompletion or typing.List[ChatCompletion] or typing.Any or typing.List[typing.Any] or AnthropicMessage or typing.List[AnthropicMessage] or AnthropicToolsBetaMessage or typing.List[AnthropicToolsBetaMessage]
 

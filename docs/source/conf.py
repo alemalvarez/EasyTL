@@ -27,7 +27,9 @@ extensions = [
 templates_path = ['_templates']
 #exclude_patterns = []
 
-autoclass_content = 'both'
+autoclass_content = 'both' 
+
+pygments_style = 'sphinx' # The style in which the code will be displayed
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

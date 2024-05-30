@@ -47,7 +47,7 @@ For example, with DeepL:
    from easytl import EasyTL
 
    ## Set your API key
-   EasyTL.credentials("deepl", "your_api_key_here")
+   EasyTL.set_credentials("deepl", "your_api_key_here")
 
    ## You can also validate your API keys; translation functions will do this automatically
    is_valid, e = EasyTL.validate_credentials("deepl")
@@ -176,5 +176,3 @@ Contributions are welcome! I don't have a specific format for contributions, but
 EasyTL was originally developed as a part of `Kudasai <https://github.com/Bikatr7/Kudasai>`_, a Japanese preprocessor later turned Machine Translator. It was later split off into its own package to be used independently of Kudasai for multiple reasons.
 
 This package is also my second serious attempt at creating a Python package, so I'm sure there are some things that could be improved. Feedback is welcomed.
-
----------------------------------------------------------------------------------------------------------------------------------------------------

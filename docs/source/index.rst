@@ -5,14 +5,15 @@
 Welcome to EasyTL's documentation!
 ##################################
 
-.. include:: ../../README.rst
-
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
-   easytl.easytl
-   easytl.services
+   apikeys
+   usage
+   easytl
+
+.. include:: ../../README.rst
 
 Indices and tables
 ==================
