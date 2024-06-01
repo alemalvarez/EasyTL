@@ -15,8 +15,6 @@ https://trello.com/b/Td555CoW/easytl
 
 We've compiled a repository of examples and use cases for EasyTL at this [GitHub repository](https://github.com/Bikatr7/easytl-demo)
 
-Full documentation [here](https://easytl.readthedocs.io/en/latest/index.html) (work in progress)
-
 *****************
 Table of Contents
 *****************
